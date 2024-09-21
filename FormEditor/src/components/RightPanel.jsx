@@ -1,19 +1,25 @@
 import React, { useState } from 'react';
 
-const RightPanel = ({ sections }) => {
+const RightPanel = ({ sections, styleConfig }) => {
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
 
-  const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
+  // Function to validate the email format
+  const validateEmail = (email) => {
+    // Check for the presence of "@" and "."
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   const handleEmailChange = (e) => {
-    const newEmail = e.target.value;
-    setEmail(newEmail);
+    const emailValue = e.target.value;
+    setEmail(emailValue);
 
-    if (!validateEmail(newEmail)) {
-      setEmailError('Invalid email format');
+    // Validate email on change
+    if (!validateEmail(emailValue)) {
+      setEmailError('Please enter a valid email address.');
     } else {
-      setEmailError('');
+      setEmailError(''); // Clear error if valid
     }
   };
 
@@ -27,37 +33,58 @@ const RightPanel = ({ sections }) => {
           <div
             key={section.id}
             className="h-screen flex items-center justify-between mb-6 p-4 border rounded-lg shadow-md bg-white"
+            style={{
+              color: styleConfig.fontColor,
+              fontFamily: styleConfig.fontType,
+            }}
           >
-            <div className="flex-grow ml-[150px]">
-              <h3 className="text-[40px] sm:text-[60px] md:text-[80px] font-bold">{section.title || 'Title'}</h3>
-              <p className="text-xl sm:text-2xl md:text-3xl ml-2">{section.description || <>Description</>}</p>
+            <div className="flex-grow ml-[110px]">
+              <h3 className="text-[40px] sm:text-[60px] md:text-[80px] font-bold">
+                {section.title || 'Title'}
+              </h3>
+              <p className="text-lg">{section.description || 'Description'}</p>
+
+              {/* Welcome section button */}
               {section.type === 'welcome' && (
-                <button className="mt-4 px-3 py-2 bg-blue-500 text-white rounded text-sm sm:text-base md:text-lg">
-                  {section.buttonText || 'Start'}
+                <button
+                  className="mt-4 px-6 py-3 text-white rounded-lg"
+                  style={{
+                    backgroundColor: styleConfig.buttonColor || '#333',
+                  }}
+                >
+                  {section.buttonText || 'Click Me'}
                 </button>
               )}
+
+              {/* Email section input field */}
               {section.type === 'email' && (
-                <div>
+                <div className="mt-4">
                   <input
                     type="email"
-                    placeholder="Enter your email"
                     value={email}
                     onChange={handleEmailChange}
-                    className={`border p-2 rounded w-full mt-4 ${emailError ? 'border-red-500' : ''}`}
+                    placeholder="Enter your email"
+                    className="px-4 py-2 border rounded-lg w-full"
+                    style={{
+                      borderColor: emailError ? 'red' : '#ccc',
+                      borderWidth: emailError ? '2px' : '1px',
+                    }}
                   />
-                  {emailError && <p className="text-red-500 text-sm">{emailError}</p>}
+                  {emailError && <p className="text-red-500 mt-1">{emailError}</p>}
                 </div>
               )}
             </div>
-            {section.image && (
-              <div className="ml-2">
+
+            {/* Image display */}
+            <div className="mr-[100px]">
+              {section.image && (
                 <img
                   src={section.image}
                   alt="Uploaded"
                   className="mr-[150px] rounded-lg w-[100px] h-[100px] sm:w-[150px] sm:h-[150px] md:w-[400px] md:h-[400px] object-cover"
                 />
-              </div>
-            )}
+              )}
+            </div>
           </div>
         ))
       )}

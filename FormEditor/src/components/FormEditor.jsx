@@ -1,3 +1,4 @@
+//FormEditor
 import React, { useState } from 'react';
 import LeftPanel from './LeftPanel';
 import RightPanel from './RightPanel';
@@ -5,6 +6,7 @@ import RightPanel from './RightPanel';
 const FormEditor = () => {
   const [sections, setSections] = useState([]);
   const [activeSectionId, setActiveSectionId] = useState(null);
+  const [styleConfig, setStyleConfig] = useState({ fontColor: '', buttonColor: '', fontType: '' });
 
   const addSection = (section) => {
     const newSection = { ...section, id: Date.now().toString() };
@@ -33,8 +35,9 @@ const FormEditor = () => {
         updateSection={updateSection}
         setActiveSectionId={setActiveSectionId}
         removeSection={removeSection}
+        setStyleConfig={setStyleConfig}
       />
-      <RightPanel sections={sections} />
+      <RightPanel sections={sections} styleConfig={styleConfig} />
     </div>
   );
 };
